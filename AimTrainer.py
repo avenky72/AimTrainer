@@ -11,6 +11,8 @@ canvas.pack()
 points = 0
 targets = {}
 r = 50
+time = 3000
+health = 10
 
 # Periodically add target
 def create_target():
@@ -24,6 +26,46 @@ def create_target():
     target = canvas.create_oval(x - r, y - r, x + r, y + r, fill=color, outline=color)
     targets[target] = {'x': x, 'y': y, 'r': r}
     print(targets)
+    global time
+    global points
+    if points > 5 and len(targets) < 5:
+        time = 2500
+        if points > 10:
+            time = 2000
+            #create_target()
+        if points > 15:
+            time = 1750
+            #create_target()
+        if points > 20:
+            time = 1500
+            #create_target()
+            #create_target()
+        if points > 25:
+            time = 1000
+            #create_target()
+            #create_target()
+        if points > 30:
+            time = 800
+        if points > 40:
+            time = 700
+        if points > 50:
+            time = 600
+        if points > 60:
+            time = 550
+        if points > 70:
+            time = 500
+        if points > 80:
+            time = 400
+        if points > 90:
+            time = 300
+        if points == 100:
+            print("You Win")
+            return
+            #create_target()
+            #create_target()
+            #create_target()
+    print(time)
+    root.after(time, create_target)
 
 
 # Remove target after 3 seconds
@@ -48,15 +90,15 @@ def get_click_coordinates(event):
             points += 1
             print(points)
             remove_target(t)
-            if not targets:
-                break
+        '''if hit(t) == False:
+            global health
+            health += 1
+        print("P: ", points, " H:", health)'''
 
 
 
 create_target()
-create_target()
-create_target()
-create_target()
+
 
 canvas.bind("<Button-1>", get_click_coordinates)
 
