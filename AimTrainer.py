@@ -20,8 +20,8 @@ def create_target():
     def randColor():
         return f'#{random.randint(0, 0xFFFFFF):06x}'
 
-    x = random.randint(100, 700)
-    y = random.randint(100, 700)
+    x = random.randint(50, 750)
+    y = random.randint(50, 750)
     color = randColor()
     target = canvas.create_oval(x - r, y - r, x + r, y + r, fill=color, outline=color)
     targets[target] = {'x': x, 'y': y, 'r': r}
@@ -60,10 +60,7 @@ def create_target():
             time = 300
         if points == 100:
             print("You Win")
-            return
-            #create_target()
-            #create_target()
-            #create_target()
+            root.destroy() 
     print(time)
     root.after(time, create_target)
 
@@ -83,17 +80,25 @@ def get_click_coordinates(event):
         target_x, target_y, radius = hit_target['x'], hit_target['y'], hit_target['r']
         in_target = math.sqrt((a - target_x) ** 2 + (b - target_y) ** 2)
         return in_target <= radius
-
+    
+    global health
+    global target_hit
+    target_hit = False
+    
     for t in targets:
         if hit(t):
+            target_hit = False
             global points
             points += 1
             print(points)
             remove_target(t)
-        '''if hit(t) == False:
-            global health
-            health += 1
-        print("P: ", points, " H:", health)'''
+            
+    if not target_hit:
+        health -= 1
+        print("P: ", points, " H:", health)
+        if health <= 0:
+            print("Game Over")
+            root.destroy() 
 
 
 
