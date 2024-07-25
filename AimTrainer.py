@@ -13,6 +13,8 @@ targets = {}
 r = 50
 time = 3000
 health = 10
+global decrease_health
+decrease_health = True
 
 # Periodically add target
 def create_target():
@@ -26,6 +28,9 @@ def create_target():
     target = canvas.create_oval(x - r, y - r, x + r, y + r, fill=color, outline=color)
     targets[target] = {'x': x, 'y': y, 'r': r}
     print(targets)
+    
+    # Remove target after 3 seconds
+    root.after(3000, lambda: remove_target(target, True))    
     global time
     global points
     if points > 5 and len(targets) < 5:
@@ -65,11 +70,17 @@ def create_target():
     root.after(time, create_target)
 
 
-# Remove target after 3 seconds
-def remove_target(target):
+def remove_target(target, decrease_health):
+    global health
     if target in targets:
         canvas.delete(target)
         del targets[target]
+        if decrease_health:
+            health -= 1
+            print("Health:", health)
+            if health <= 0:
+                print("Game Over")
+                root.destroy()
 
 def get_click_coordinates(event):
     a, b = event.x, event.y
@@ -91,7 +102,7 @@ def get_click_coordinates(event):
             global points
             points += 1
             print(points)
-            remove_target(t)
+            remove_target(t, False)
             
     if not target_hit:
         health -= 1
