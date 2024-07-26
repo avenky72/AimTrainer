@@ -15,6 +15,14 @@ time = 3000
 health = 10
 global decrease_health
 decrease_health = True
+points_label = tk.Label(root, text=f"Points: {points}", font=('arial', 14), bg="pink")
+points_label.pack(pady=10)
+health_label = tk.Label(root, text=f"Health: {health}", font=('arial', 14), bg="lightblue")
+health_label.pack(pady=10)
+
+def update_labels():
+    points_label.config(text=f"Points: {points}")
+    health_label.config(text=f"Health: {health}")
 
 # Periodically add target
 def create_target():
@@ -65,11 +73,20 @@ def create_target():
             time = 300
         if points == 100:
             print("You Win")
-            root.destroy() 
+            winner()
+            #root.after(4000, root.destroy())
     print(time)
     root.after(time, create_target)
 
 
+def winner():
+    winner_label = tk.Label(root, text="You win!", font=('arial', 20, 'bold'), bg="green")
+    winner_label.pack(pady=20)
+    
+def loser():
+    loser_label = tk.Label(root, text="You lose!", font=('arial', 20, 'bold'), bg="red")
+    loser_label.pack(pady=20)
+    
 def remove_target(target, decrease_health):
     global health
     if target in targets:
@@ -77,10 +94,13 @@ def remove_target(target, decrease_health):
         del targets[target]
         if decrease_health:
             health -= 1
+            update_labels()
             print("Health:", health)
             if health <= 0:
                 print("Game Over")
-                root.destroy()
+                loser()
+                #root.after(10000, root.destroy())
+                #root.destroy()
 
 def get_click_coordinates(event):
     a, b = event.x, event.y
@@ -101,15 +121,18 @@ def get_click_coordinates(event):
             target_hit = False
             global points
             points += 1
+            update_labels()
             print(points)
             remove_target(t, False)
             
     if not target_hit:
         health -= 1
+        update_labels()
         print("P: ", points, " H:", health)
         if health <= 0:
             print("Game Over")
-            root.destroy() 
+            loser()
+            #root.destroy() 
 
 
 
